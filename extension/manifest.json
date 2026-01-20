@@ -1,31 +1,18 @@
 {
     "manifest_version": 3,
     "name": "Remembrall",
-    "version":0.1,
-    "icon": {
-        "128" : "temp.png" 
-    },
+    "version":"0.1",
     "permissions": [
+        "tabs",
+        "commands",
         "activeTab",
-        "scripts",
+        "scripting",
         "clipboardRead",
         "clipboardWrite",
         "contextMenus",
         "storage"
     ],
-    "content scripts": [
-    {
-        "matches" : [
-            "<all_urls>"
-        ],
-        "js":[
-            "js/temp.js"
-        ],
-        "css":[
-            "css/style.css"
-        ]
-    } 
-    ],
+ 
     "background" : {
         "service_worker" : "js/background.js",
         "type" : "module"
