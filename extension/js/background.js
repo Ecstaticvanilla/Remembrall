@@ -40,3 +40,4 @@ chrome.contextMenus.onClicked.addListener(addToNotes)
 //     console.log("context menu : " + tab.url);
 //     return tab;
 // }
+

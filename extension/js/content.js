@@ -5,4 +5,4 @@ async function getCurrentTab() {
     return tab;
 }
 
-getCurrentTab();
+// getCurrentTab();
