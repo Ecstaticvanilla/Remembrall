@@ -1,10 +1,28 @@
 {
     "manifest_version": 3,
     "name": "Remembrall",
+    "icons" : {
+        "16" : "icons/iconcm.png",
+        "128" : "icons/icon.png"
+    },
+    "content_scripts": [
+        {
+        "matches": [
+            "<all_urls>"
+        ],
+        "js": [
+            "js/content.js"
+        ],
+        "css": [
+            "css/style.css"
+        ]
+        }
+    ],
     "version":"0.1",
     "permissions": [
         "tabs",
         "commands",
+        "contextMenus",
         "activeTab",
         "scripting",
         "clipboardRead",
@@ -21,9 +39,9 @@
         "topSites"
     ],
     "host_permissions": [
-    ],
-    "optional_host_permissions":[
         "https://*/*",
         "http://*/*"
+    ],
+    "optional_host_permissions":[
     ]
 }
