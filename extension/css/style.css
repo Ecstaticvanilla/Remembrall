@@ -1,20 +1,22 @@
-body{
-
-    width: 160px;
+html, body{
+    /* width: 160px;
     height: 200px;
+    margin: 0px;
+    text-align: center; */
     background-color: #d2ace8;
-    text-align: center;
 }
 
 .container {
-    background-image: url("../icons/bckgrnd.png");
+    background-image: url("../icons/bckgrnd2.png");
     background-size: cover;     
     background-repeat: no-repeat;
     background-position: center;
+    /* background-color: #d2ace8; */
     display: flex;
     flex-direction: column; 
     justify-content: center;
     align-items: center;    
+    width: 160px;
     height: 200px; 
 }
 

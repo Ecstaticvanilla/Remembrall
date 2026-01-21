@@ -28,7 +28,6 @@
             "js/note.js"
         ],
         "css": [
-            "css/style.css",
             "css/note.css"
         ],
         "run_at":"document_idle"
