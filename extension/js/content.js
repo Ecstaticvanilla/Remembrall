@@ -29,18 +29,24 @@ chrome.runtime.onMessage.addListener((request) => {
         container.style.overflow = "hidden";
 
         const header = document.createElement("div");
-        header.style.backgroundColor = "#420070";
+        header.style.backgroundColor = "black";
         header.style.cursor = "move";
+        header.style.fontSize = "16px";
+        header.innerText = "Note Header";
+        header.style.fontWeight = "bold";
         header.style.userSelect = "none";
         header.style.height = "30px";
 
         const textarea = document.createElement("textarea");
         textarea.style.width = "100%";
         textarea.style.height = "100%";
-        textarea.style.backgroundColor = "#b97bde";
-        textarea.style.color = "#420070";
+        // textarea.style.height = "";
+        // textarea.style.height = this.scrollHeight + "px";
+        textarea.style.backgroundColor = "#b5b4b4b6";
+        textarea.style.color = "#000000";
         textarea.style.border = "none";
         textarea.style.resize = "none";
+        textarea.style.outline = "none";
         textarea.value = "THIS IS A NOTE!!!";
 
         let isDragging = false;
