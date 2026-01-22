@@ -41,3 +41,7 @@ chrome.contextMenus.onClicked.addListener(addToNotes)
 //     return tab;
 // }
 
+chrome.sidePanel
+    .setPanelBehavior({ openPanelOnActionClick: false })
+    .catch((error) => console.error(error));
+

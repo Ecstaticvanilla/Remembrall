@@ -8,9 +8,13 @@
 <body>
     <div class="container">
         <a href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer"><img class = banner  src="..\icons\bannersmall.png"></a>
-        <button class="button addnote">Add Note</button>
+        <button onclick="create()" class="button addnote" id = "addnotes">Add Note</button>
         <button class="button managenote" id = "managenotes">Manage Notes</button>
         <script src="../js/background.js"></script>
+        <script src="../js/content.js"></script>
+        <div id="notes">
+        </div>
+
     </div>
 </body>
 </html>
