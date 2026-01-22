@@ -10,7 +10,6 @@ async function requestNewNote(){
 }
 
 
-
 document.addEventListener("DOMContentLoaded", () => {
     newnote_button = document.getElementById("newnote");
     newnote_button.addEventListener("click", requestNewNote);
