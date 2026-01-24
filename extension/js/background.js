@@ -27,7 +27,12 @@ async function addToNotes(info,tab){
     }
     // let queryOptions = { active: true, lastFocusedWindow: true };
     // let [tab] = await chrome.tabs.query(queryOptions);
-    console.log("Note : \"" + info.selectionText +"\". \nurl : " + tab.url.split('#')[0]);
+    let noteUrl =  tab.url.split('#')[0];
+    console.log("Note : \"" + info.selectionText +"\". \nurl : " + noteUrl  );
+    // put logic to add action createnote message note msg to content.js
+    let response = await chrome.tabs.sendMessage(tab.id,{action: "createnote", noteText: info.selectionText, noteURL: noteUrl});
+    console.log(response, "note added from context menu");
+
     return;
 }
 
