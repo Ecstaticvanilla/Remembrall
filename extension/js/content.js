@@ -13,30 +13,72 @@
 // });
 // getCurrentTab();
 
-const styles = `
+const themes = {
+    default: {
+        primaryColor: "#000000",
+        secondaryColor: "#898088bf",    
+        thirdColor: "#ffffff",    
+        textColor: "#000000"
+    },    
+    purple: {
+        primaryColor: "#390a32",
+        secondaryColor: "#b96bb4b6",    
+        thirdColor: "#ffffff",    
+        textColor: "#390a32"
+    },    
+    yellow: {
+        primaryColor: "#52561e",
+        secondaryColor: "#eeff00",    
+        thirdColor: "#ffffff",    
+        textColor: "#000000"
+    },    
+    blue: {
+        primaryColor: "#1f1257",
+        secondaryColor: "#836bec",    
+        thirdColor: "#ffffff",    
+        textColor: "#1f1257"
+    },    
+    green: {
+        primaryColor: "#0e3b10",
+        secondaryColor: "#71ae74",    
+        thirdColor: "#ffffff",    
+        textColor: "#0e3b10"
+    }
+}
+
+const styles = 
+`
+    :root {
+        --primary-color: #1f1257;
+        --secondary-color: #836bec;
+        --third-color: #ffffff;
+        --text-color: #1f1257;  
+    }
+
     .notebutton {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        height: 20px;
-        width: 20px;
-        // font-weight: bold;
-        background-color: #b5b4b462;
-        color: white;
+        height: 15px;
+        width: 15px;
+        /* font-weight: bold; */
+        background-color: transparent; 
+        color: var(--secondary-color);
         border: none;
         border-radius: 50%;
-        font-size: 18px;
+        font-size: 13px;
         z-index: 1001;
         cursor: pointer;
-        transition: opacity 0.2s, transform 0.2s;
+        outline: 2px solid var(--secondary-color);
+        transition: opacity 0.2s, transform 0.2s , outline 0.2s;
 
         display: flex;             
         justify-content: center;    
         align-items: center;        
     }
-    .closenote{
+    .closenote {
         right: 10px;
-    }    
+    }
     .minimizenote{
         left: 10px;
     }    
@@ -44,10 +86,11 @@ const styles = `
         left: 40px;
     }
     .tempthree{
-        left: 62px;
+        left: 65px;
     }
     .notebutton:hover { opacity: 0.7; }
-    .notebutton:active { opacity: 0.5; transform: translateY(-50%) rotate(90deg);}
+    .notebutton:active { opacity: 0.5; transform: translateY(-50%) rotate(90deg); outline: 2px dotted var(--third-color);
+}
 `;
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
@@ -55,7 +98,7 @@ document.head.appendChild(styleSheet);
 
 headerui = `
     <button class="notebutton closenote">×</button>
-    <button class="notebutton minimizenote">-</button>
+    <button class="notebutton minimizenote">=</button>
     <button class="notebutton temptwo">F</button>
     <button class="notebutton tempthree">B</button>
 `;
@@ -72,8 +115,8 @@ chrome.runtime.onMessage.addListener((request) => {
         container.style.left = "100px";
         container.style.width = "200px";
         container.style.height = "200px";
-        container.style.backgroundColor = "black";
-        container.style.color = "white";
+        container.style.backgroundColor = "var(--primary-color)";
+        container.style.color = "var(--text-color)";
         container.style.zIndex = "1000";
         container.style.resize = "both";
         container.style.overflow = "hidden";
@@ -85,7 +128,7 @@ chrome.runtime.onMessage.addListener((request) => {
         container.id =  Date.now();// Unique ID finally!
 
         const header = document.createElement("div");
-        header.style.backgroundColor = "black";
+        header.style.backgroundColor = "var(--primary-color)";
         header.style.position = "relative";
         header.style.cursor = "move";
         header.style.height = "30px";
@@ -100,8 +143,8 @@ chrome.runtime.onMessage.addListener((request) => {
 
         const textarea = document.createElement("textarea");
         textarea.style.width = "100%";
-        textarea.style.backgroundColor = "#b5b4b4b6";
-        textarea.style.color = "#000000";
+        textarea.style.backgroundColor = "var(--secondary-color)";
+        textarea.style.color = "var(--text-color)";
         textarea.style.border = "none";
         textarea.style.resize = "none";
         textarea.style.outline = "none";
