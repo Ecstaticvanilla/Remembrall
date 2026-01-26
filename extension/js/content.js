@@ -102,8 +102,8 @@ headerui = `
     <button class="notebutton temptwo">F</button>
     <button class="notebutton tempthree">B</button>
 `;
-//Have to add a button to pin instead of scrolling with scrollbar
-//also add another button to bring forward layering(these are temp2 and temp3)
+// Focus changes layering of notes
+// Have to add a button to pin instead of scrolling with scrollbar and theme selector (temp 2 and 3)
 
 
 chrome.runtime.onMessage.addListener((request) => {
@@ -201,4 +201,13 @@ chrome.runtime.onMessage.addListener((request) => {
     }
 
     return true;
+});
+
+let db = null;
+//request for the database object
+document.addEventListener("readystatechange", (event) => {
+    chrome.runtime.sendMessage({action: "indexdb_object"}, (response) => {
+        db = response.data;
+        console.log(`db object recieved: ${db}`);
+    });
 });
