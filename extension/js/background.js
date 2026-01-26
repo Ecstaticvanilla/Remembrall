@@ -50,3 +50,35 @@ chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: false })
     .catch((error) => console.error(error));
 
+
+
+//Managing indexDB
+let db = null;
+const request = indexedDB.open("Remembrall");
+
+request.onupgradeneeded = (event) => {
+    db = event.target.result;
+
+
+    const url = db.createObjectStore('url', {keyPath: "url"});
+    const notes = db.createObjectStore('notes', {keyPath: "id"});
+}
+
+request.onsuccess = (event) => {
+    db = event.target.result
+    console.log(`db: ${event.target.result}`);
+}
+
+request.onerror = (event) => {
+    console.log(`${event.target.error}`);
+}
+
+
+//handle indexdb request from contentjs
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("message Recieved")
+    if(request.action === "indexdb_object"){
+        sendResponse({data: db})
+    }
+    return true;
+});

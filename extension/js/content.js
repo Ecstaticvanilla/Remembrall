@@ -291,3 +291,12 @@ chrome.runtime.onMessage.addListener((request) => {
 
     return true;
 });
+
+let db = null;
+//request for the database object
+document.addEventListener("readystatechange", (event) => {
+    chrome.runtime.sendMessage({action: "indexdb_object"}, (response) => {
+        db = response.data;
+        console.log(`db object recieved: ${db}`);
+    });
+});
