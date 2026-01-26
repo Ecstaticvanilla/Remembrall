@@ -16,13 +16,13 @@
 const themes = {
     default: {
         primaryColor: "#000000",
-        secondaryColor: "#898088bf",    
+        secondaryColor: "#898088",    
         thirdColor: "#ffffff",    
         textColor: "#000000"
     },    
     purple: {
         primaryColor: "#390a32",
-        secondaryColor: "#b96bb4b6",    
+        secondaryColor: "#b96bb4",    
         thirdColor: "#ffffff",    
         textColor: "#390a32"
     },    
@@ -43,17 +43,33 @@ const themes = {
         secondaryColor: "#71ae74",    
         thirdColor: "#ffffff",    
         textColor: "#0e3b10"
+    },
+    red: {
+        primaryColor: "#3b0e0e",
+        secondaryColor: "#c04747",    
+        thirdColor: "#ffffff",    
+        textColor: "#3b0e0e"
     }
 }
 
 const styles = 
 `
     :root {
-        --primary-color: #1f1257;
-        --secondary-color: #836bec;
-        --third-color: #ffffff;
-        --text-color: #1f1257;  
+        --primary-color: #000000;
+        --secondary-color: #898088; 
+        --third-color: #ffffff;   
+        --text-color: #000000;
     }
+    .themepickergrid .themebutton {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;        
+            border: none; 
+            cursor: pointer;
+            transition: opacity 0.2s;  
+    }   
+    .themebutton:hover { opacity: 0.7; }
+    .themebutton:active { opacity: 0.5; }
 
     .notebutton {
         position: absolute;
@@ -85,12 +101,17 @@ const styles =
     .temptwo{
         left: 40px;
     }
-    .tempthree{
+    .themepicker{
         left: 65px;
     }
+    .themepickergrid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        height: 100%;
+    }
     .notebutton:hover { opacity: 0.7; }
-    .notebutton:active { opacity: 0.5; transform: translateY(-50%) rotate(90deg); outline: 2px dotted var(--third-color);
-}
+    .notebutton:active { opacity: 0.5; transform: translateY(-50%) rotate(90deg); outline: 2px dotted var(--third-color);}
+    /* .notebutton:focus { z-index: 10001;} */
 `;
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
@@ -99,12 +120,25 @@ document.head.appendChild(styleSheet);
 headerui = `
     <button class="notebutton closenote">×</button>
     <button class="notebutton minimizenote">=</button>
-    <button class="notebutton temptwo">F</button>
-    <button class="notebutton tempthree">B</button>
+    <button class="notebutton temptwo">P</button>
+    <button class="notebutton themepicker">T</button>
 `;
-//Have to add a button to pin instead of scrolling with scrollbar
-//also add another button to bring forward layering(these are temp2 and temp3)
 
+pickcerui= `
+    <div class = themepickergrid>
+        <button class="themebutton default"></button>
+        <button class="themebutton purple"></button>
+        <button class="themebutton yellow"></button>
+        <button class="themebutton blue"></button>
+        <button class="themebutton green"></button>
+        <button class="themebutton red"></button>
+    </div>
+`;
+// Focus changes layering of notes
+// Have to add a button to pin instead of scrolling with scrollbar and theme selector (temp 2 and 3)
+
+let maxz = 1000;
+//Top z-index
 
 chrome.runtime.onMessage.addListener((request) => {
     if (request.action === 'createnote') {
@@ -121,11 +155,15 @@ chrome.runtime.onMessage.addListener((request) => {
         container.style.resize = "both";
         container.style.overflow = "hidden";
         container.style.minHeight = "130px"; 
-        container.style.minWidth = "130px";
+        container.style.minWidth = "200px";
         container.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.8)"; 
         container.style.display = "flex"; 
         container.style.flexDirection = "column";
         container.id =  Date.now();// Unique ID finally!
+
+        // container.addEventListener("click", () => {
+        //     container.style.zIndex = 10000;
+        // });
 
         const header = document.createElement("div");
         header.style.backgroundColor = "var(--primary-color)";
@@ -140,6 +178,20 @@ chrome.runtime.onMessage.addListener((request) => {
         header.style.display = "flex";
         header.style.flexDirection = "row"; 
         header.innerHTML = headerui;
+
+        const picker = document.createElement("div");
+        picker.style.position = "relative";
+        picker.style.height = "30px";
+        picker.style.display = "none";     
+        picker.style.backgroundColor = "#a3a3a3";
+        picker.style.flex = "0 0 30px";
+        picker.innerHTML = pickcerui;
+        Object.entries(themes).forEach(([name, theme]) => {
+            const btn = picker.querySelector(`.themebutton.${name}`);
+            if (!btn) return;
+
+            btn.style.backgroundColor = theme.secondaryColor;
+        });
 
         const textarea = document.createElement("textarea");
         textarea.style.width = "100%";
@@ -156,23 +208,50 @@ chrome.runtime.onMessage.addListener((request) => {
         textarea.style.flex = "1"; 
 
         const closeBtn = header.querySelector(".closenote");
-        closeBtn.addEventListener("click", () => {
-            container.remove();
-        });
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => {
+                container.remove();
+        });}
 
         const minimizeBtn = header.querySelector(".minimizenote");
+        if (minimizeBtn) {
         minimizeBtn.addEventListener("click", () => {
             if (textarea.style.display === "none") {
                 textarea.style.display = "block";
                 container.style.height = "200px";
                 container.style.minHeight = "130px";
+                container.style.resize = "both";
             }else{
                 textarea.style.display = "none";
                 container.style.minHeight = "30px";
                 container.style.height = "30px";
+                container.style.resize = "none";
             }
+        });}
+
+        const pickerBtn = header.querySelector(".themepicker");
+        if (pickerBtn) {
+            pickerBtn.addEventListener("click", () => {
+                picker.style.display = picker.style.display === "none" ? "block" : "none";
+        });}
+        function applyTheme(themeName) {
+            const theme = themes[themeName];
+            if (!theme) 
+                return;
+            const root = document.documentElement;
+            root.style.setProperty("--primary-color", theme.primaryColor);
+            root.style.setProperty("--secondary-color", theme.secondaryColor);
+            root.style.setProperty("--third-color", theme.thirdColor);
+            root.style.setProperty("--text-color", theme.textColor);
+        }
+
+        picker.querySelectorAll(".themebutton").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const themeName = [...btn.classList].find(c => themes[c]);
+                applyTheme(themeName);
+            });
         });
-        
+
         let offset = { x: 0, y: 0 };
         function onMouseMove(e) {
             container.style.left = (e.clientX - offset.x) + 'px';
@@ -195,7 +274,17 @@ chrome.runtime.onMessage.addListener((request) => {
             document.addEventListener('mouseup', onMouseUp);
         });
 
+        bringToFront = (note) => {
+            note.style.zIndex = maxz++;
+        };
+
+        container.addEventListener("mousedown", () => {
+        bringToFront(container);
+        });
+
+
         container.appendChild(header);
+        container.appendChild(picker);
         container.appendChild(textarea);
         document.body.appendChild(container);
     }
