@@ -58,7 +58,7 @@ const request = indexedDB.open("Remembrall");
 
 request.onupgradeneeded = (event) => {
     db = event.target.result;
-
+    console.log(`${db}`);
 
     const url = db.createObjectStore('url', {keyPath: "url"});
     const notes = db.createObjectStore('notes', {keyPath: "id"});
@@ -79,6 +79,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("message Recieved")
     if(request.action === "indexdb_object"){
         sendResponse({data: db})
+        console.log(`${db}`);
     }
     return true;
 });

@@ -1,0 +1,149 @@
+
+body {
+    background-color: #93749a;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap:10%;
+    overflow: hidden;
+    height: 100vh;
+
+    background: linear-gradient(270deg, #93749a, #6a9fc8, #f0b7a4, #93749a);
+    background-size: 800% 800%;
+    animation: rotate 20s ease infinite;
+}
+
+@keyframes rotate {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+.featuressidebar,
+.container,
+.demosidebar {
+    flex: 1 1 33%;
+    max-width: 33%;          
+    box-sizing: border-box;   
+    padding: 10px;            
+}
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mainlogo{
+    position:fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.header{
+    font-size: 32px;
+}
+
+.description {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 16px;
+    text-shadow: 0 0 10px #ffffff;
+    text-decoration: none;
+}
+
+.featuressidebar{
+    color: #ffffff;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-shadow: 0 0 10px #ffffff;
+    font-size: 16px;
+
+}
+.contact-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;   
+    justify-content: baseline;
+    margin-bottom: 10px;
+}
+
+.contact-links{
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    flex-direction: row;
+}
+.logo {
+    width: 70px;
+    height: auto;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px #ffffff);
+}
+.logo.bannerlogo{
+    width: 300px;
+    height: auto;
+}
+.github-avatar {
+    width: 100px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.button {
+    height: 50px;
+    width: auto;
+    padding: 10px 20px;
+    border: 3px solid transparent;
+    background-color: #ffffff;
+    color: black;
+    font-size: 16px;
+    box-shadow: 0 0 10px #ffffff;
+    transition:box-shadow 0.2s ease,background-color 0.25s ease,transform 0.12s ease;
+}
+
+.button:hover {
+    cursor: pointer;
+    box-shadow: 0 0 16px #ffffff;
+}
+
+.button:active {
+    color: #ffffff;
+    background-color: transparent;
+    border-color: #ffffff;
+    box-shadow: 0 0 14px #ffffff;
+    transform: scale(0.96);
+}
+
+.glow {
+    background-image: url(icon.png);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    pointer-events: none; 
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    filter: blur(35px);
+    transform: translate(-50%, -50%);
+    transition: top 0.05s, left 0.05s; 
+    z-index: 999;
+}
+
+
+
