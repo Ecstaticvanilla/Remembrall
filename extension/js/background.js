@@ -78,10 +78,6 @@ request.onerror = (event) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("message Recieved")
     if(request.action === "indexdb_object"){
-        while(db === null){
-
-        }
-        console.log(`sending: ${db}`)
         sendResponse({data: db})
     }
     return true;
