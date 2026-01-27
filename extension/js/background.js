@@ -67,9 +67,6 @@ request.onupgradeneeded = (event) => {
 request.onsuccess = (event) => {
     db = event.target.result;
     console.log(`database opened, db: ${event.target.result}`);
-
-    addToNote("101","this is sick");
-    addToNote("102", "swayam is dumb");
 }
 
 request.onerror = (event) => {
@@ -160,6 +157,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if(request.action === "addToUrl"){
         addToUrl(request.noteURL,request.noteId);
+        sendResponse({status: true});
     }
     else{
         sendResponse({status: false});

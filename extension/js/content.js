@@ -283,8 +283,12 @@ chrome.runtime.onMessage.addListener((request) => {
         });
 
         
+        //INDEXDB CHANGES
         //on note creation update urlTable append current noteid 
         //this ensure no dups in urlTable
+
+        //appending this new note in the url table
+        // addToUrl(document.URL.split('#')[0], container.id);
 
 
         //adding oninput property to textarea
@@ -333,7 +337,7 @@ chrome.runtime.onMessage.addListener((request) => {
 //id: note.id
 //url: document.URL.split('#')[0]
 function addToNote(url,id,content){
-    chrome.runtime.sendMessage({action: "addToUrlTable",noteURL: url, noteId: id, noteText: content}, (response) =>
+    chrome.runtime.sendMessage({action: "addToNote",noteURL: url, noteId: id, noteText: content}, (response) =>
     {
         if(response.status){
             console.log("note added to db");
