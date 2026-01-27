@@ -67,14 +67,6 @@ request.onupgradeneeded = (event) => {
 request.onsuccess = (event) => {
     db = event.target.result;
     console.log(`database opened, db: ${event.target.result}`);
-
-    // addToUrl("http://google.com/","105");
-    addToUrl("http://google.com/","104");
-    // addToUrl("http://google.com/","103");
-    // addToUrl("http://google.com/","102");
-    // addToUrl("http://google.com/","101");
-
-
 }
 
 request.onerror = (event) => {
@@ -131,26 +123,23 @@ function addToNote(id,content){
     //logic to add ids for url
 
     //first get ids already mapped to the url
-    const req = notesTable.get(url);
+    const req = notesTable.get(id);
     req.onsuccess = () => {
-        const ids = [id];
         const res = req.result;
         console.log(`fetched result from notesTable: ${res}`);
 
         if(res === undefined){
             const data = {
-                url: url,
-                value: [id]
+                id: id,
+                value: content
             }
             notesTable.add(data);
         }
         else{
-
-            res.value.push(id);
+            res.value = content;
             const putReq = notesTable.put(res);
         }
-
-        transactionUrl.onsuccess = () =>{
+        transactionNote.onsuccess = () =>{
             console.log("transaction succuessful" + id + " added in db");
         }
     }
@@ -168,6 +157,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if(request.action === "addToUrl"){
         addToUrl(request.noteURL,request.noteId);
+        sendResponse({status: true});
     }
     else{
         sendResponse({status: false});
