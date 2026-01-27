@@ -282,6 +282,28 @@ chrome.runtime.onMessage.addListener((request) => {
         bringToFront(container);
         });
 
+        
+        //on note creation update urlTable append current noteid 
+        //this ensure no dups in urlTable
+
+
+        //adding oninput property to textarea
+        //this is will trigger for every keystorke , paste or change in textarea content
+        //setting timer/debounce effect to make sure user is not still typing
+        // let timer;
+        // textarea.oninput = () =>{
+        //     clearTimeout(timer);
+        //     //settimeout of every 1 second or 500ms , if oldval == val call funtion
+        //     //if oldval != val dont call function
+        //     //reset timeout   
+        //     timer = setTimeout(()=>{
+        //             url = document.URL.split('#')[0];
+        //             id = container.id;
+        //             content = textarea.value;
+        //             addToUrl(url,id);
+        //             clearTimeout(timer);
+        //     },1000);   
+        // }
 
         container.appendChild(header);
         container.appendChild(picker);
@@ -292,11 +314,45 @@ chrome.runtime.onMessage.addListener((request) => {
     return true;
 });
 
-let db = null;
-//request for the database object
-document.addEventListener("readystatechange", (event) => {
-    chrome.runtime.sendMessage({action: "indexdb_object"}, (response) => {
-        db = response.data;
-        console.log(`db object recieved: ${db}`);
+
+//NO LONGER being used replaced by req for change in db using functions and triggers
+//previous db passing function
+// let db = null;
+// //request for the database object
+// document.addEventListener("readystatechange", (event) => {
+//     chrome.runtime.sendMessage({action: "indexdb_object"}, (response) => {
+//         db = response.data;
+//         console.log(`db object recieved: ${db}` + db instanceof IDBDatabase);
+//     });
+// });
+
+
+//request background js
+//action: addtonote
+//message: content
+//id: note.id
+//url: document.URL.split('#')[0]
+function addToNote(url,id,content){
+    chrome.runtime.sendMessage({action: "addToUrlTable",noteURL: url, noteId: id, noteText: content}, (response) =>
+    {
+        if(response.status){
+            console.log("note added to db");
+        }
+        else{
+            console.log("note not added")
+        }
     });
-});
+}
+
+function addToUrl(url,id){
+    chrome.runtime.sendMessage({action: "addToUrl",noteURL: url, noteId: id, noteText: content}, (response) =>
+    {
+        if(response.status){
+            console.log("Id appened in urltable");
+        }
+        else{
+            console.log("error while request for id append in urltable")
+        }
+    });
+}
+

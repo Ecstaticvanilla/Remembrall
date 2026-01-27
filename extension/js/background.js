@@ -58,28 +58,119 @@ const request = indexedDB.open("Remembrall");
 
 request.onupgradeneeded = (event) => {
     db = event.target.result;
-    console.log(`${db}`);
+    console.log(`database created: ${db}`);
 
-    const url = db.createObjectStore('url', {keyPath: "url"});
-    const notes = db.createObjectStore('notes', {keyPath: "id"});
+    const url = db.createObjectStore('urlTable', {keyPath: "url"});
+    const notes = db.createObjectStore('notesTable', {keyPath: "id"});
 }
 
 request.onsuccess = (event) => {
-    db = event.target.result
-    console.log(`db: ${event.target.result}`);
+    db = event.target.result;
+    console.log(`database opened, db: ${event.target.result}`);
+
+    // addToUrl("http://google.com/","105");
+    addToUrl("http://google.com/","104");
+    // addToUrl("http://google.com/","103");
+    // addToUrl("http://google.com/","102");
+    // addToUrl("http://google.com/","101");
+
+
 }
 
 request.onerror = (event) => {
-    console.log(`${event.target.error}`);
+    console.log(`database not opened error: ${event.target.error}`);
 }
 
 
-//handle indexdb request from contentjs
+// //handle indexdb request from contentjs
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//     console.log("message Recieved")
+//     if(request.action === "indexdb_object"){
+//         sendResponse({data: db})
+//     }
+//     return true;
+// });
+
+function addToUrl(url,id){
+    //create transaction for urltable
+    const transactionUrl = db.transaction('urlTable',"readwrite");
+    const urlTable = transactionUrl.objectStore('urlTable');
+
+    //logic to add ids for url
+
+    //first get ids already mapped to the url
+    const req = urlTable.get(url);
+    req.onsuccess = () => {
+        const ids = [id];
+        const res = req.result;
+        console.log(`fetched result from urltable: ${res}`);
+
+        if(res === undefined){
+            const data = {
+                url: url,
+                value: [id]
+            }
+            urlTable.add(data);
+        }
+        else{
+
+            res.value.push(id);
+            const putReq = urlTable.put(res);
+        }
+
+        transactionUrl.onsuccess = () =>{
+            console.log("transaction succuessful" + id + " added in db");
+        }
+    }
+}
+
+function addToNote(id,content){
+    const transactionNote = db.transaction('notesTable', "readwrite");
+    const notesTable = transactionNote.objectStore('notesTable');
+
+    //logic to add ids for url
+
+    //first get ids already mapped to the url
+    const req = notesTable.get(url);
+    req.onsuccess = () => {
+        const ids = [id];
+        const res = req.result;
+        console.log(`fetched result from notesTable: ${res}`);
+
+        if(res === undefined){
+            const data = {
+                url: url,
+                value: [id]
+            }
+            notesTable.add(data);
+        }
+        else{
+
+            res.value.push(id);
+            const putReq = notesTable.put(res);
+        }
+
+        transactionUrl.onsuccess = () =>{
+            console.log("transaction succuessful" + id + " added in db");
+        }
+    }
+}
+
+
+// add to note request from contentjs
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("message Recieved")
-    if(request.action === "indexdb_object"){
-        sendResponse({data: db})
-        console.log(`${db}`);
+    console.log("message for note recieved: " + request);
+    
+    if(request.action === "addToNote"){
+        //addToNote(request.noteID,)
+        addToNote(request.noteId,request.noteText);
+        sendResponse({status: true});
+    }
+    else if(request.action === "addToUrl"){
+        addToUrl(request.noteURL,request.noteId);
+    }
+    else{
+        sendResponse({status: false});
     }
     return true;
 });
