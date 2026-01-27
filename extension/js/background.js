@@ -174,3 +174,53 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     return true;
 });
+
+
+
+function deleteFromUrl(url,id){
+    //create transaction for urltable
+    const transactionUrl = db.transaction('urlTable',"readwrite");
+    const urlTable = transactionUrl.objectStore('urlTable');
+
+    //first get ids already mapped to the url
+    const req = urlTable.get(url);
+    req.onsuccess = () => {
+        const res = req.result;
+        console.log(`fetched result from urltable: ${res}`);
+
+        if(res === undefined){
+            console.log(`No entry for url: ${url} found in db`);
+        }
+        else{
+            let index = res.value.indexOf(id);
+            if(index > -1){
+                res.value.splice(index,1); 
+            }
+            const putReq = urlTable.put(res);
+        }
+
+        transactionUrl.onsuccess = () =>{
+            console.log("transaction succuessful" + id + " removed from db");
+        }
+    }
+}
+
+function deleteFromNotes(id){
+    //create transaction for notesTable
+    const transactionNotes = db.transaction('notesTable',"readwrite");
+    const notesTable = transactionNotes.objectStore('notesTable');
+
+    //first get ids already mapped to the url
+    const req = notesTable.get(id);
+    req.onsuccess = () => {
+        const res = req.result;
+        if(res === undefined){
+            console.log(`No entry for notes: ${id} found in db`);
+        }
+        notesTable.delete(id);
+
+        transactionNotes.onsuccess = () =>{
+            console.log("transaction succuessful" + id + " removed from db");
+        }
+    }
+}
