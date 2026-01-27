@@ -288,26 +288,29 @@ chrome.runtime.onMessage.addListener((request) => {
         //this ensure no dups in urlTable
 
         //appending this new note in the url table
-        // addToUrl(document.URL.split('#')[0], container.id);
+        let url = document.URL.split('#')[0];
+        let id = container.id;
+        let content = textarea.value;
+        addToUrl(url,id);
+        addToNote(url,id,content);
 
 
         //adding oninput property to textarea
         //this is will trigger for every keystorke , paste or change in textarea content
         //setting timer/debounce effect to make sure user is not still typing
-        // let timer;
-        // textarea.oninput = () =>{
-        //     clearTimeout(timer);
-        //     //settimeout of every 1 second or 500ms , if oldval == val call funtion
-        //     //if oldval != val dont call function
-        //     //reset timeout   
-        //     timer = setTimeout(()=>{
-        //             url = document.URL.split('#')[0];
-        //             id = container.id;
-        //             content = textarea.value;
-        //             addToUrl(url,id);
-        //             clearTimeout(timer);
-        //     },1000);   
-        // }
+        let timer = null;
+        textarea.oninput = () =>{
+            if (timer !== null)
+                clearTimeout(timer);
+            //settimeout of every 1 second or 500ms , if oldval == val call funtion
+            //if oldval != val dont call function
+            //reset timeout   
+            timer = setTimeout(()=>{
+                    content = textarea.value;
+                    addToNote(url,id,content);
+                    clearTimeout(timer);
+            },5000);   
+        }
 
         container.appendChild(header);
         container.appendChild(picker);
@@ -349,7 +352,7 @@ function addToNote(url,id,content){
 }
 
 function addToUrl(url,id){
-    chrome.runtime.sendMessage({action: "addToUrl",noteURL: url, noteId: id, noteText: content}, (response) =>
+    chrome.runtime.sendMessage({action: "addToUrl",noteURL: url, noteId: id}, (response) =>
     {
         if(response.status){
             console.log("Id appened in urltable");

@@ -146,26 +146,6 @@ function addToNote(id,content){
 }
 
 
-// add to note request from contentjs
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("message for note recieved: " + request);
-    
-    if(request.action === "addToNote"){
-        //addToNote(request.noteID,)
-        addToNote(request.noteId,request.noteText);
-        sendResponse({status: true});
-    }
-    else if(request.action === "addToUrl"){
-        addToUrl(request.noteURL,request.noteId);
-        sendResponse({status: true});
-    }
-    else{
-        sendResponse({status: false});
-    }
-    return true;
-});
-
-
 
 function deleteFromUrl(url,id){
     //create transaction for urltable
@@ -214,3 +194,24 @@ function deleteFromNotes(id){
         }
     }
 }
+
+
+// add to note request from contentjs
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("message for note recieved: " + request);
+    
+    if(request.action === "addToNote"){
+        //addToNote(request.noteID,)
+        addToNote(request.noteId,request.noteText);
+        sendResponse({status: true});
+    }
+    else if(request.action === "addToUrl"){
+        addToUrl(request.noteURL,request.noteId);
+        sendResponse({status: true});
+    }
+    else{
+        sendResponse({status: false});
+    }
+    return true;
+});
+

@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Remembrall",
-    "version":"0.4.2069",
+    "version":"0.6.9",
     
     "permissions": [
         "tabs",
