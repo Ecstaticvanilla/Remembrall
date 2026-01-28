@@ -14,3 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
     newnote_button = document.getElementById("newnote");
     newnote_button.addEventListener("click", requestNewNote);
 });
+
+document.getElementById('managenotes').addEventListener('click', async () => {
+    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    chrome.sidePanel.open({ tabId: tab.id });
+    //should be auto call 
+    // chrome.runtime.sendMessage({action: "getnotesforurl", url: tab.url}, (response) => {
+    //     console.log("Sidepanel opened");
+    // });
+});

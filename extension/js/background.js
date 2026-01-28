@@ -83,6 +83,8 @@ request.onerror = (event) => {
 //     return true;
 // });
 
+
+//if id already in table skip adding
 function addToUrl(url,id){
     //create transaction for urltable
     const transactionUrl = db.transaction('urlTable',"readwrite");
@@ -93,7 +95,6 @@ function addToUrl(url,id){
     //first get ids already mapped to the url
     const req = urlTable.get(url);
     req.onsuccess = () => {
-        const ids = [id];
         const res = req.result;
         console.log(`fetched result from urltable: ${res}`);
 
@@ -105,7 +106,14 @@ function addToUrl(url,id){
             urlTable.add(data);
         }
         else{
-
+            //check if id is unique or exists in table already
+            //this condition is required cause sidepanel also uses
+            //createnode action to prevent dups ensure check
+            const ids = res.value;
+            if(!ids.includes(id)){
+                res.value.push(id);
+                const putReq = urlTable.put(res);
+            }
             res.value.push(id);
             const putReq = urlTable.put(res);
         }
@@ -116,6 +124,7 @@ function addToUrl(url,id){
     }
 }
 
+//if id already in table skip adding
 function addToNote(id,content){
     const transactionNote = db.transaction('notesTable', "readwrite");
     const notesTable = transactionNote.objectStore('notesTable');
@@ -195,8 +204,37 @@ function deleteFromNotes(id){
     }
 }
 
+function getNotes(url) {
+    const tx = db.transaction(["urlTable", "notesTable"], "readonly");
+    const urlStore = tx.objectStore("urlTable");
+    const notesStore = tx.objectStore("notesTable");
 
-// add to note request from contentjs
+    const req = urlStore.get(url);
+
+    req.onsuccess = () => {
+        if (req.result === undefined) {
+            console.log("URL not present in the db");
+            return;
+        }
+
+        const ids = req.result.value;
+        ids.forEach(id => { 
+            const noteReq = notesStore.get(id);
+
+            noteReq.onsuccess = () => {
+                if (noteReq.result === undefined) {
+                    console.log("Note not present in the db");
+                    return;
+                }
+                console.log("Id:", id, "Note:", noteReq.result.value);
+                chrome.runtime.sendMessage({action: "addnotetosidepanel",noteId: id,noteText: noteReq.result.value}, (response) => {
+                    console.log("Note sent to sidepanel");
+                });
+            };
+        });
+    };
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("message for note recieved: " + request);
     
@@ -215,3 +253,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
 });
 
+
+//testing only maybw
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.action === "getnotesforurl"){
+        getNotes("https://en.wikipedia.org/wiki/Main_Page");
+    }
+});
+
+
+//might remove if not needed
+// chrome.runtime.onConnect.addListener(port => {
+//     if (port.name === 'sidePanel') {
+//         port.onMessage.addListener(msg => {
+//             if (msg === 'getnotes') {
+//                 getNotes(tab.url);
+//             }
+//         });
+//     }
+// });

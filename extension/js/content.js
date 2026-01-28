@@ -1,9 +1,3 @@
-// const { createElement } = require("react");
-
-// document.getElementById('managenotes').addEventListener('click', async () => {
-//     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-//     chrome.sidePanel.open({ tabId: tab.id });
-// });
 
 // document.getElementById('addnotes').addEventListener('click', async () => {
 //     const note = document.createElement("n");
@@ -317,7 +311,6 @@ chrome.runtime.onMessage.addListener((request) => {
         container.appendChild(textarea);
         document.body.appendChild(container);
     }
-
     return true;
 });
 
@@ -363,3 +356,4 @@ function addToUrl(url,id){
     });
 }
 
+//add function to get notes for current url if sidebar is open 
