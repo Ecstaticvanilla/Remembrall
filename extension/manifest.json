@@ -4,16 +4,16 @@
     "version":"0.6.9",
     
     "permissions": [
-        "tabs",
-        "commands",
-        "contextMenus",
         "activeTab",
-        "scripting",
         "clipboardRead",
         "clipboardWrite",
+        "commands",
         "contextMenus",
-        "storage",
+        "scripting",
         "sidePanel",
+        "storage",
+        "tabs",
+        "webNavigation",
         "windows"
     ],
     "icons" : {

@@ -114,8 +114,6 @@ function addToUrl(url,id){
                 res.value.push(id);
                 const putReq = urlTable.put(res);
             }
-            res.value.push(id);
-            const putReq = urlTable.put(res);
         }
 
         transactionUrl.onsuccess = () =>{
@@ -257,7 +255,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //testing only maybw
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.action === "getnotesforurl"){
-        getNotes("https://en.wikipedia.org/wiki/Main_Page");
+        getNotes(request.url);
     }
 });
 

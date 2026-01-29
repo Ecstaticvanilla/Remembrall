@@ -287,7 +287,7 @@ chrome.runtime.onMessage.addListener((request) => {
         let content = textarea.value;
         addToUrl(url,id);
         addToNote(url,id,content);
-
+        getNotesAfterAddNote(id,content);
 
         //adding oninput property to textarea
         //this is will trigger for every keystorke , paste or change in textarea content
@@ -357,3 +357,26 @@ function addToUrl(url,id){
 }
 
 //add function to get notes for current url if sidebar is open 
+function getNotesAfterAddNote(id,content){
+    chrome.runtime.sendMessage({action: "addnotetosidepanel",noteId: id, noteText: content}, (response) => {
+        console.log("add note to sidepanel if open");
+    });
+}
+
+
+///ON URL CHANGE SIDEPANEL
+// const observeUrlChange = () => {
+//     let oldHref = document.location.href;
+//     const body = document.querySelector('body');
+//     const observer = new MutationObserver(mutations => {
+//         if (oldHref !== document.location.href) {
+//             oldHref = document.location.href;
+//             chrome.runtime.sendMessage({action: "getnotesforurl",url:oldHref}, (response) => {
+//                 console.log("Sidepanel reloaded");
+//             });
+//         }
+//     });
+//     observer.observe(body, { childList: true, subtree: true });
+// };
+
+// window.onload = observeUrlChange;

@@ -1,0 +1,10 @@
+body{
+    background-color: #f6edb7;
+}
+
+.sidepanelcontainer{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
+}
