@@ -20,6 +20,14 @@ document.addEventListener('DOMContentLoaded', async() => {
     }
 });
 
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.action === "reload"){
+        location.reload();
+    }
+});
+
+
 // const styles = 
 // `
 //     .btn{
@@ -123,7 +131,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         };
         if (popbtn){
             popbtn.addEventListener("click", () => {
-                console.log("yet to add logic");
+                chrome.runtime.sendMessage({action: "createnote",url:tab.url,id:note.id,noteText:note.innerText}, (response) => {
+                    console.log("note popped onto live");
+                });
             });
         };
 

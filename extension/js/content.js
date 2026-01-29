@@ -92,7 +92,7 @@ const styles =
     .minimizenote{
         left: 10px;
     }    
-    .temptwo{
+    .pinnote{
         left: 40px;
     }
     .themepicker{
@@ -114,7 +114,7 @@ document.head.appendChild(styleSheet);
 headerui = `
     <button class="extensionnotebutton closenote">×</button>
     <button class="extensionnotebutton minimizenote">=</button>
-    <button class="extensionnotebutton temptwo">P</button>
+    <button class="extensionnotebutton pinnote">P</button>
     <button class="extensionnotebutton themepicker">T</button>
 `;
 
@@ -201,7 +201,7 @@ chrome.runtime.onMessage.addListener((request) => {
         textarea.style.overflow = "auto"; 
         textarea.style.flex = "1"; 
         textarea.style.fontFamily = "'Courier New', Courier, monospace";
-        
+
         const closeBtn = header.querySelector(".closenote");
         if (closeBtn) {
             closeBtn.addEventListener("click", () => {
@@ -223,6 +223,26 @@ chrome.runtime.onMessage.addListener((request) => {
                 container.style.resize = "none";
             }
         });}
+
+        const pinBtn = header.querySelector(".pinnote");
+        let isPinned = false;
+        pinBtn.addEventListener("click", () => {
+            isPinned = !isPinned;
+            if (isPinned) {                
+                
+                // container.style.position = "absolute";
+
+                pinBtn.style.backgroundColor = "var(--secondary-color)";
+                pinBtn.style.color = "var(--primary-color)";
+                header.style.cursor = "not-allowed"; 
+            } 
+            else {
+                
+                pinBtn.style.backgroundColor = "transparent";
+                pinBtn.style.color = "var(--secondary-color)";
+                header.style.cursor = "move";
+            }
+        });
 
         const pickerBtn = header.querySelector(".themepicker");
         if (pickerBtn) {
@@ -254,17 +274,24 @@ chrome.runtime.onMessage.addListener((request) => {
         }
 
         function onMouseUp() {
-            header.style.cursor = 'move';
+            if (isPinned) {
+                 header.style.cursor = 'not-allowed'; 
+            } else {
+                 header.style.cursor = 'move';
+            }                
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
+            
         }
 
         header.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('closenote')) return; 
+            if (isPinned) return;
+            if (e.target.classList.contains('extensionnotebutton')) return; 
+            
+            header.style.cursor = 'grabbing';
             offset.x = e.clientX - container.getBoundingClientRect().left;
             offset.y = e.clientY - container.getBoundingClientRect().top;
             
-            header.style.cursor = 'grabbing';
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
         });
@@ -359,7 +386,7 @@ function addToUrl(url,id){
 
 //add function to get notes for current url if sidebar is open 
 function getNotesAfterAddNote(id,content){
-    chrome.runtime.sendMessage({action: "addnotetosidepanel",noteId: id, noteText: content}, (response) => {
+    chrome.runtime.sendMessage({action: "reload",noteId: id, noteText: content}, (response) => {
         console.log("add note to sidepanel if open");
     });
 }
