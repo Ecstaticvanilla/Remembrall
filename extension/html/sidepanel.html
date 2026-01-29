@@ -8,11 +8,14 @@
     <script src="../js/sidepanel.js" defer></script>
 </head>
 <body>
-    <h1>Notes</h1>
+    <marquee style = "font-size: 30px;">MANAGE DEM NOTEZ</marquee>
     <div class = "sidepanelcontainer" >
         <!-- add search functionality idk how lol-->
-        <input  id = "search" class = "search" placeholder="Search..."></input>
-        <ul id="noteslist" style = " list-style: none;"></ul>
+        <div class = "topBar">
+            <input  id = "search" class = "search" placeholder="Search...">
+            <button class = "btn refreshButton" id = "refreshButton">Refresh O</button>
+        </div>
+        <ul id="noteslist" class = "noteslist" ></ul>
     </div>
 </body>
 </html>

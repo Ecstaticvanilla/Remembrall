@@ -65,7 +65,7 @@ const styles =
     .themebutton:hover { opacity: 0.7; }
     .themebutton:active { opacity: 0.5; }
 
-    .notebutton {
+    .extensionnotebutton {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
@@ -103,19 +103,19 @@ const styles =
         grid-template-columns: repeat(6, 1fr);
         height: 100%;
     }
-    .notebutton:hover { opacity: 0.7; }
-    .notebutton:active { opacity: 0.5; transform: translateY(-50%) rotate(90deg); outline: 2px dotted var(--third-color);}
-    /* .notebutton:focus { z-index: 10001;} */
+    .extensionnotebutton:hover { opacity: 0.7; }
+    .extensionnotebutton:active { opacity: 0.5; transform: translateY(-50%) rotate(90deg); outline: 2px dotted var(--third-color);}
+    /* .extensionnotebutton:focus { z-index: 10001;} */
 `;
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 headerui = `
-    <button class="notebutton closenote">×</button>
-    <button class="notebutton minimizenote">=</button>
-    <button class="notebutton temptwo">P</button>
-    <button class="notebutton themepicker">T</button>
+    <button class="extensionnotebutton closenote">×</button>
+    <button class="extensionnotebutton minimizenote">=</button>
+    <button class="extensionnotebutton temptwo">P</button>
+    <button class="extensionnotebutton themepicker">T</button>
 `;
 
 pickcerui= `
@@ -200,7 +200,8 @@ chrome.runtime.onMessage.addListener((request) => {
         }
         textarea.style.overflow = "auto"; 
         textarea.style.flex = "1"; 
-
+        textarea.style.fontFamily = "'Courier New', Courier, monospace";
+        
         const closeBtn = header.querySelector(".closenote");
         if (closeBtn) {
             closeBtn.addEventListener("click", () => {

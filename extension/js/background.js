@@ -182,10 +182,11 @@ function deleteFromUrl(url,id){
     }
 }
 
-function deleteFromNotes(id){
+function deleteFromNotes(url, id){
     //create transaction for notesTable
     const transactionNotes = db.transaction('notesTable',"readwrite");
     const notesTable = transactionNotes.objectStore('notesTable');
+    deleteFromUrl(url,id)
 
     //first get ids already mapped to the url
     const req = notesTable.get(id);
@@ -258,6 +259,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         getNotes(request.url);
     }
 });
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.action === "deletenote"){
+        deleteFromNotes(request.url,request.id);
+    }
+});
+
 
 
 //might remove if not needed
