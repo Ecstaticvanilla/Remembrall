@@ -5,7 +5,9 @@
 // const port = chrome.runtime.connect({name: 'sidePanel'});
 // setTimeout(() => port.postMessage('getnotes'),1000); 
 
+
 document.addEventListener('DOMContentLoaded', async() => {
+
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     chrome.runtime.sendMessage({action: "getnotesforurl",url:tab.url}, (response) => {
         console.log("Sidepanel opened");
@@ -17,6 +19,34 @@ document.addEventListener('DOMContentLoaded', async() => {
             console.log("hello >//<");
             location.reload(); 
         });
+    }
+
+
+
+    //implementing search functionaly
+    //iterate through list wiht users input and update list of notes in menu
+    const searchbar = document.getElementById("search");
+    if (searchbar){
+
+        //getting every container in the menu
+        const notecontainerlist = document.getElementsByClassName("notecontainer");
+
+        // yoo boiii on every keystroke my boii types i iterate over every note and hide the container 
+        //that aint my shit ...Booom!!
+        searchbar.addEventListener("input", (event) =>{
+            const searchText = searchbar.value.toLowerCase();
+            for(let i = 0; i < notecontainerlist.length; i++){
+                
+                const note = notecontainerlist[i].querySelector('.note');
+                if(!note.innerText.toLowerCase().includes(searchText)){
+                    notecontainerlist[i].style.display = "none";
+                }
+                else{
+                    notecontainerlist[i].style.display = "flex";
+                }
+            }
+
+        })
     }
 });
 
@@ -74,6 +104,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "addnotetosidepanel"){
 
         const container = document.createElement("div");
+        container.className = "notecontainer";
         container.style.display = "flex";
         container.style.flexDirection = "row";
         container.style.justifyContent = "space-between";
@@ -129,13 +160,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 });
             });
         };
-        if (popbtn){
-            popbtn.addEventListener("click", () => {
-                chrome.runtime.sendMessage({action: "createnote",url:tab.url,id:note.id,noteText:note.innerText}, (response) => {
-                    console.log("note popped onto live");
-                });
-            });
-        };
+        // if (popbtn){
+        //     popbtn.addEventListener("click", async () => {
+        //         let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        //         chrome.tabs.sendMessage(tab.id,{action: "createnote",url:tab.url,id:note.id,noteText:note.innerText,isPop:true}, (response) => {
+        //             console.log("note popped onto live");
+        //         });
+        //     });
+        // };
 
         //////////////////
         container.appendChild(note);

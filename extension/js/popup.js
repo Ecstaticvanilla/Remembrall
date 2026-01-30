@@ -5,7 +5,7 @@ async function requestNewNote(){
     let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
     //sending message to content.js of this tab
     
-    let response = await chrome.tabs.sendMessage(tab.id,{action: "createnote"});
+    let response = await chrome.tabs.sendMessage(tab.id,{action: "createnote", isPop: false});
     console.log(response, "message sent");
 }
 

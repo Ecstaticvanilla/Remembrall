@@ -30,7 +30,7 @@ async function addToNotes(info,tab){
     // let [tab] = await chrome.tabs.query(queryOptions);
     let noteUrl =  tab.url.split('#')[0];
     console.log("Note : \"" + info.selectionText +"\". \nurl : " + noteUrl  );
-    let response = await chrome.tabs.sendMessage(tab.id,{action: "createnote", noteText: info.selectionText, noteURL: noteUrl});
+    let response = await chrome.tabs.sendMessage(tab.id,{action: "createnote", noteText: info.selectionText, noteURL: noteUrl, isPop: false});
     console.log(response, "note added from context menu");
 
     return;
